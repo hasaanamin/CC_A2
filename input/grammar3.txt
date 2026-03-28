@@ -1,0 +1,2 @@
+Start -> Aux a | b
+Aux -> Start c | d

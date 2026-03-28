@@ -1,0 +1,8 @@
+// Grammar 5: Epsilon productions and multiple levels
+// Tests epsilon handling in FIRST/FOLLOW computation
+Prog -> Stmts
+Stmts -> Stmt Stmts | @
+Stmt -> id = Expr ;
+Expr -> Term ExprTail
+ExprTail -> + Term ExprTail | @
+Term -> id | num | ( Expr )

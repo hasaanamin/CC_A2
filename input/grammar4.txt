@@ -1,0 +1,4 @@
+// Grammar 4: Already LL(1) - no transformations needed
+// Tests that the tool doesn't break a correct grammar
+Decl -> Type id ;
+Type -> int | float | char

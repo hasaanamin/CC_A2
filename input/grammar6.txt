@@ -1,0 +1,3 @@
+// Grammar 6: Multiple left factoring needed
+// Tests nested/repeated left factoring
+Expr -> id + Expr | id * Expr | id

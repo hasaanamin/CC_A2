@@ -1,0 +1,6 @@
+// Grammar 7: Both left factoring AND left recursion needed
+List -> List , Element | Element
+Element -> id | id ( ArgList )
+ArgList -> Arg ArgTail
+ArgTail -> , Arg ArgTail | @
+Arg -> id | num
