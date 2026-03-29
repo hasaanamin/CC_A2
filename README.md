@@ -2,8 +2,8 @@
 ## LL(1) Parser Design & Implementation 
 
 ### Team Members
-- 23i-0665 Muhammad Tabarak Cheema
-- 23i-0019 Hasaan Amin
+- 23i-0665 Muhammad Tabarak Cheema (Section C)
+- 23i-0019 Hasaan Amin (Section C)
 
 ### Programming Language
 - **Java**
@@ -11,7 +11,7 @@
 ### Compilation Instructions
 This project has no external dependencies. To compile from the `src` directory, you can use the standard `javac` command:
 ```bash
-cd 22i1234-22i5678-A/src
+cd 23i0665-23i0019-C/src
 javac *.java
 ```
 
