@@ -2,6 +2,10 @@
  * LeftFactoring.java
  * CS4031 - Compiler Construction, Assignment 02
  *
+ * Group Members:
+ *   - 23i-0665 Muhammad Tabarak Cheema
+ *   - 23i-0019 Hasaan Amin
+ *
  * Description:
  *   Implements left factoring transformation on a CFG.
  *   Eliminates common prefixes by introducing new non-terminals.
@@ -148,3 +152,4 @@ public class LeftFactoring {
         return prefix;
     }
 }
+

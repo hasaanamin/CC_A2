@@ -2,6 +2,10 @@
  * LeftRecursion.java
  * CS4031 - Compiler Construction, Assignment 02
  *
+ * Group Members:
+ *   - 23i-0665 Muhammad Tabarak Cheema
+ *   - 23i-0019 Hasaan Amin
+ *
  * Description:
  *   Removes both direct and indirect left recursion from a CFG.
  *   Uses the standard algorithm:
@@ -185,3 +189,4 @@ public class LeftRecursion {
         g.setProductions(newNT, primeAlts);
     }
 }
+

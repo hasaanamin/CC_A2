@@ -2,6 +2,10 @@
  * ParsingTable.java
  * CS4031 - Compiler Construction, Assignment 02
  *
+ * Group Members:
+ *   - 23i-0665 Muhammad Tabarak Cheema
+ *   - 23i-0019 Hasaan Amin
+ *
  * Description:
  *   Constructs the LL(1) parsing table M[A, a] from FIRST and FOLLOW sets.
  *   Detects conflicts (multiple entries in a cell) to determine if the
@@ -300,3 +304,4 @@ public class ParsingTable {
         writer.close();
     }
 }
+

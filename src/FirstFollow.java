@@ -2,6 +2,10 @@
  * FirstFollow.java
  * CS4031 - Compiler Construction, Assignment 02
  *
+ * Group Members:
+ *   - 23i-0665 Muhammad Tabarak Cheema
+ *   - 23i-0019 Hasaan Amin
+ *
  * Description:
  *   Computes FIRST and FOLLOW sets for all non-terminals in a CFG.
  *   Uses fixed-point iteration (repeats until no changes).
@@ -253,3 +257,4 @@ public class FirstFollow {
         writer.close();
     }
 }
+
