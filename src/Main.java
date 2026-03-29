@@ -4,9 +4,8 @@
  * LL(1) Parser Design & Implementation - Spring 2026
  *
  * Group Members:
- *   - [RollNumber1] [Name1]
- *   - [RollNumber2] [Name2]
- * Section: [Section]
+ *   - 23i-0665 Muhammad Tabarak Cheema
+ *   - 23i-0019 Hasaan Amin
  *
  * Description:
  *   Main entry point for the LL(1) Parser.
