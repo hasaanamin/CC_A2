@@ -1,0 +1,640 @@
+LL(1) Parser - Complete Output
+Generated: 2026-03-29 12:18:37
+Grammar: ../input/grammar7.txt
+Input: ../input/input_g7.txt
+
+============================================================
+  Original Grammar
+============================================================
+  List -> List , Element | Element
+  Element -> id | id ( ArgList )
+  ArgList -> Arg ArgTail
+  ArgTail -> , Arg ArgTail | @
+  Arg -> id | num
+============================================================
+
+============================================================
+  Grammar After Left Factoring
+============================================================
+  List -> List , Element | Element
+  Element -> id ElementPrime
+  ElementPrime -> @ | ( ArgList )
+  ArgList -> Arg ArgTail
+  ArgTail -> , Arg ArgTail | @
+  Arg -> id | num
+============================================================
+
+============================================================
+  Grammar After Left Recursion Removal
+============================================================
+  List -> Element ListPrime
+  ListPrime -> , Element ListPrime | @
+  Element -> id ElementPrime
+  ElementPrime -> @ | ( ArgList )
+  ArgList -> Arg ArgTail
+  ArgTail -> , Arg ArgTail | @
+  Arg -> id | num
+============================================================
+
+============================================================
+  FIRST Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  List                 { id }
+  ListPrime            { ,, @ }
+  Element              { id }
+  ElementPrime         { @, ( }
+  ArgList              { id, num }
+  ArgTail              { ,, @ }
+  Arg                  { id, num }
+============================================================
+
+============================================================
+  FOLLOW Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  List                 { $ }
+  ListPrime            { $ }
+  Element              { ,, $ }
+  ElementPrime         { ,, $ }
+  ArgList              { ) }
+  ArgTail              { ) }
+  Arg                  { ,, ) }
+============================================================
+
+================================================================================
+  LL(1) Parsing Table
+================================================================================
+                 | ,                                 | id                                | (                                 | )                                 | num                               | $                                 |
+  ---------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+-----------------------------------+
+  List           |                                   | List -> Element ListPrime         |                                   |                                   |                                   |                                   |
+  ListPrime      | ListPrime -> , Element ListPrime  |                                   |                                   |                                   |                                   | ListPrime -> @                    |
+  Element        |                                   | Element -> id ElementPrime        |                                   |                                   |                                   |                                   |
+  ElementPrime   | ElementPrime -> @                 |                                   | ElementPrime -> ( ArgList )       |                                   |                                   | ElementPrime -> @                 |
+  ArgList        |                                   | ArgList -> Arg ArgTail            |                                   |                                   | ArgList -> Arg ArgTail            |                                   |
+  ArgTail        | ArgTail -> , Arg ArgTail          |                                   |                                   | ArgTail -> @                      |                                   |                                   |
+  Arg            |                                   | Arg -> id                         |                                   |                                   | Arg -> num                        |                                   |
+================================================================================
+
+  [OK] The grammar IS LL(1).
+
+======================================================================
+  Input: id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id $                      | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id $                      | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id $                      | Match 'id'
+  4     | $ ListPrime ElementPrime            | $                         | ElementPrime -> @
+  5     | $ ListPrime                         | $                         | ListPrime -> @
+  6     | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     └─ [ε]
+     └─ ListPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       └── ε
+    └── ListPrime
+        └── ε
+
+  Preorder:  List Element id ElementPrime @ ListPrime @
+  Postorder: id @ ElementPrime Element @ ListPrime List
+============================================================
+
+======================================================================
+  Input: id , id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id , id $                 | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id , id $                 | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id , id $                 | Match 'id'
+  4     | $ ListPrime ElementPrime            | , id $                    | ElementPrime -> @
+  5     | $ ListPrime                         | , id $                    | ListPrime -> , Element ListPrime
+  6     | $ ListPrime Element ,               | , id $                    | Match ','
+  7     | $ ListPrime Element                 | id $                      | Element -> id ElementPrime
+  8     | $ ListPrime ElementPrime id         | id $                      | Match 'id'
+  9     | $ ListPrime ElementPrime            | $                         | ElementPrime -> @
+  10    | $ ListPrime                         | $                         | ListPrime -> @
+  11    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id , id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     └─ [ε]
+     └─ ListPrime
+        ├─ [,]
+        ├─ Element
+        │  ├─ [id]
+        │  └─ ElementPrime
+        │     └─ [ε]
+        └─ ListPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       └── ε
+    └── ListPrime
+        ├── ","
+        ├── Element
+        │   ├── "id"
+        │   └── ElementPrime
+        │       └── ε
+        └── ListPrime
+            └── ε
+
+  Preorder:  List Element id ElementPrime @ ListPrime , Element id ElementPrime @ ListPrime @
+  Postorder: id @ ElementPrime Element , id @ ElementPrime Element @ ListPrime ListPrime List
+============================================================
+
+======================================================================
+  Input: id , id ( id )
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id , id ( id ) $          | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id , id ( id ) $          | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id , id ( id ) $          | Match 'id'
+  4     | $ ListPrime ElementPrime            | , id ( id ) $             | ElementPrime -> @
+  5     | $ ListPrime                         | , id ( id ) $             | ListPrime -> , Element ListPrime
+  6     | $ ListPrime Element ,               | , id ( id ) $             | Match ','
+  7     | $ ListPrime Element                 | id ( id ) $               | Element -> id ElementPrime
+  8     | $ ListPrime ElementPrime id         | id ( id ) $               | Match 'id'
+  9     | $ ListPrime ElementPrime            | ( id ) $                  | ElementPrime -> ( ArgList )
+  10    | $ ListPrime ) ArgList (             | ( id ) $                  | Match '('
+  11    | $ ListPrime ) ArgList               | id ) $                    | ArgList -> Arg ArgTail
+  12    | $ ListPrime ) ArgTail Arg           | id ) $                    | Arg -> id
+  13    | $ ListPrime ) ArgTail id            | id ) $                    | Match 'id'
+  14    | $ ListPrime ) ArgTail               | ) $                       | ArgTail -> @
+  15    | $ ListPrime )                       | ) $                       | Match ')'
+  16    | $ ListPrime                         | $                         | ListPrime -> @
+  17    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id , id ( id )
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     └─ [ε]
+     └─ ListPrime
+        ├─ [,]
+        ├─ Element
+        │  ├─ [id]
+        │  └─ ElementPrime
+        │     ├─ [(]
+        │     ├─ ArgList
+        │     │  ├─ Arg
+        │     │  │  └─ [id]
+        │     │  └─ ArgTail
+        │     │     └─ [ε]
+        │     └─ [)]
+        └─ ListPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       └── ε
+    └── ListPrime
+        ├── ","
+        ├── Element
+        │   ├── "id"
+        │   └── ElementPrime
+        │       ├── "("
+        │       ├── ArgList
+        │       │   ├── Arg
+        │       │   │   └── "id"
+        │       │   └── ArgTail
+        │       │       └── ε
+        │       └── ")"
+        └── ListPrime
+            └── ε
+
+  Preorder:  List Element id ElementPrime @ ListPrime , Element id ElementPrime ( ArgList Arg id ArgTail @ ) ListPrime @
+  Postorder: id @ ElementPrime Element , id ( id Arg @ ArgTail ArgList ) ElementPrime Element @ ListPrime ListPrime List
+============================================================
+
+======================================================================
+  Input: id ( num , id ) , id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id ( num , id ) , id $    | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id ( num , id ) , id $    | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id ( num , id ) , id $    | Match 'id'
+  4     | $ ListPrime ElementPrime            | ( num , id ) , id $       | ElementPrime -> ( ArgList )
+  5     | $ ListPrime ) ArgList (             | ( num , id ) , id $       | Match '('
+  6     | $ ListPrime ) ArgList               | num , id ) , id $         | ArgList -> Arg ArgTail
+  7     | $ ListPrime ) ArgTail Arg           | num , id ) , id $         | Arg -> num
+  8     | $ ListPrime ) ArgTail num           | num , id ) , id $         | Match 'num'
+  9     | $ ListPrime ) ArgTail               | , id ) , id $             | ArgTail -> , Arg ArgTail
+  10    | $ ListPrime ) ArgTail Arg ,         | , id ) , id $             | Match ','
+  11    | $ ListPrime ) ArgTail Arg           | id ) , id $               | Arg -> id
+  12    | $ ListPrime ) ArgTail id            | id ) , id $               | Match 'id'
+  13    | $ ListPrime ) ArgTail               | ) , id $                  | ArgTail -> @
+  14    | $ ListPrime )                       | ) , id $                  | Match ')'
+  15    | $ ListPrime                         | , id $                    | ListPrime -> , Element ListPrime
+  16    | $ ListPrime Element ,               | , id $                    | Match ','
+  17    | $ ListPrime Element                 | id $                      | Element -> id ElementPrime
+  18    | $ ListPrime ElementPrime id         | id $                      | Match 'id'
+  19    | $ ListPrime ElementPrime            | $                         | ElementPrime -> @
+  20    | $ ListPrime                         | $                         | ListPrime -> @
+  21    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id ( num , id ) , id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     ├─ [(]
+     │     ├─ ArgList
+     │     │  ├─ Arg
+     │     │  │  └─ [num]
+     │     │  └─ ArgTail
+     │     │     ├─ [,]
+     │     │     ├─ Arg
+     │     │     │  └─ [id]
+     │     │     └─ ArgTail
+     │     │        └─ [ε]
+     │     └─ [)]
+     └─ ListPrime
+        ├─ [,]
+        ├─ Element
+        │  ├─ [id]
+        │  └─ ElementPrime
+        │     └─ [ε]
+        └─ ListPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       ├── "("
+    │       ├── ArgList
+    │       │   ├── Arg
+    │       │   │   └── "num"
+    │       │   └── ArgTail
+    │       │       ├── ","
+    │       │       ├── Arg
+    │       │       │   └── "id"
+    │       │       └── ArgTail
+    │       │           └── ε
+    │       └── ")"
+    └── ListPrime
+        ├── ","
+        ├── Element
+        │   ├── "id"
+        │   └── ElementPrime
+        │       └── ε
+        └── ListPrime
+            └── ε
+
+  Preorder:  List Element id ElementPrime ( ArgList Arg num ArgTail , Arg id ArgTail @ ) ListPrime , Element id ElementPrime @ ListPrime @
+  Postorder: id ( num Arg , id Arg @ ArgTail ArgTail ArgList ) ElementPrime Element , id @ ElementPrime Element @ ListPrime ListPrime List
+============================================================
+
+======================================================================
+  Input: id ( id , num , id )
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id ( id , num , id ) $    | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id ( id , num , id ) $    | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id ( id , num , id ) $    | Match 'id'
+  4     | $ ListPrime ElementPrime            | ( id , num , id ) $       | ElementPrime -> ( ArgList )
+  5     | $ ListPrime ) ArgList (             | ( id , num , id ) $       | Match '('
+  6     | $ ListPrime ) ArgList               | id , num , id ) $         | ArgList -> Arg ArgTail
+  7     | $ ListPrime ) ArgTail Arg           | id , num , id ) $         | Arg -> id
+  8     | $ ListPrime ) ArgTail id            | id , num , id ) $         | Match 'id'
+  9     | $ ListPrime ) ArgTail               | , num , id ) $            | ArgTail -> , Arg ArgTail
+  10    | $ ListPrime ) ArgTail Arg ,         | , num , id ) $            | Match ','
+  11    | $ ListPrime ) ArgTail Arg           | num , id ) $              | Arg -> num
+  12    | $ ListPrime ) ArgTail num           | num , id ) $              | Match 'num'
+  13    | $ ListPrime ) ArgTail               | , id ) $                  | ArgTail -> , Arg ArgTail
+  14    | $ ListPrime ) ArgTail Arg ,         | , id ) $                  | Match ','
+  15    | $ ListPrime ) ArgTail Arg           | id ) $                    | Arg -> id
+  16    | $ ListPrime ) ArgTail id            | id ) $                    | Match 'id'
+  17    | $ ListPrime ) ArgTail               | ) $                       | ArgTail -> @
+  18    | $ ListPrime )                       | ) $                       | Match ')'
+  19    | $ ListPrime                         | $                         | ListPrime -> @
+  20    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id ( id , num , id )
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     ├─ [(]
+     │     ├─ ArgList
+     │     │  ├─ Arg
+     │     │  │  └─ [id]
+     │     │  └─ ArgTail
+     │     │     ├─ [,]
+     │     │     ├─ Arg
+     │     │     │  └─ [num]
+     │     │     └─ ArgTail
+     │     │        ├─ [,]
+     │     │        ├─ Arg
+     │     │        │  └─ [id]
+     │     │        └─ ArgTail
+     │     │           └─ [ε]
+     │     └─ [)]
+     └─ ListPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       ├── "("
+    │       ├── ArgList
+    │       │   ├── Arg
+    │       │   │   └── "id"
+    │       │   └── ArgTail
+    │       │       ├── ","
+    │       │       ├── Arg
+    │       │       │   └── "num"
+    │       │       └── ArgTail
+    │       │           ├── ","
+    │       │           ├── Arg
+    │       │           │   └── "id"
+    │       │           └── ArgTail
+    │       │               └── ε
+    │       └── ")"
+    └── ListPrime
+        └── ε
+
+  Preorder:  List Element id ElementPrime ( ArgList Arg id ArgTail , Arg num ArgTail , Arg id ArgTail @ ) ListPrime @
+  Postorder: id ( id Arg , num Arg , id Arg @ ArgTail ArgTail ArgTail ArgList ) ElementPrime Element @ ListPrime List
+============================================================
+
+======================================================================
+  Input: id ( )
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id ( ) $                  | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id ( ) $                  | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id ( ) $                  | Match 'id'
+  4     | $ ListPrime ElementPrime            | ( ) $                     | ElementPrime -> ( ArgList )
+  5     | $ ListPrime ) ArgList (             | ( ) $                     | Match '('
+  6     | $ ListPrime ) ArgList               | ) $                       | ERROR: No entry M[ArgList, )]. Pop 'ArgList' (sync on FOLLOW)
+  7     | $ ListPrime )                       | ) $                       | Match ')'
+  8     | $ ListPrime                         | $                         | ListPrime -> @
+  9     | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 6, column 3: No production for M[ArgList, )]. Unexpected ')'. Action: Popped 'ArgList' from stack
+
+============================================================
+  Parse Tree for: id ( )
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     ├─ [(]
+     │     ├─ ArgList
+     │     └─ [)]
+     └─ ListPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       ├── "("
+    │       ├── ArgList
+    │       └── ")"
+    └── ListPrime
+        └── ε
+
+  Preorder:  List Element id ElementPrime ( ArgList ) ListPrime @
+  Postorder: id ( ArgList ) ElementPrime Element @ ListPrime List
+============================================================
+
+======================================================================
+  Input: id , , id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id , , id $               | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id , , id $               | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id , , id $               | Match 'id'
+  4     | $ ListPrime ElementPrime            | , , id $                  | ElementPrime -> @
+  5     | $ ListPrime                         | , , id $                  | ListPrime -> , Element ListPrime
+  6     | $ ListPrime Element ,               | , , id $                  | Match ','
+  7     | $ ListPrime Element                 | , id $                    | ERROR: No entry M[Element, ,]. Pop 'Element' (sync on FOLLOW)
+  8     | $ ListPrime                         | , id $                    | ListPrime -> , Element ListPrime
+  9     | $ ListPrime Element ,               | , id $                    | Match ','
+  10    | $ ListPrime Element                 | id $                      | Element -> id ElementPrime
+  11    | $ ListPrime ElementPrime id         | id $                      | Match 'id'
+  12    | $ ListPrime ElementPrime            | $                         | ElementPrime -> @
+  13    | $ ListPrime                         | $                         | ListPrime -> @
+  14    | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 7, column 3: No production for M[Element, ,]. Unexpected ','. Action: Popped 'Element' from stack
+
+============================================================
+  Parse Tree for: id , , id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     └─ [ε]
+     └─ ListPrime
+        ├─ [,]
+        ├─ Element
+        └─ ListPrime
+           ├─ [,]
+           ├─ Element
+           │  ├─ [id]
+           │  └─ ElementPrime
+           │     └─ [ε]
+           └─ ListPrime
+              └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       └── ε
+    └── ListPrime
+        ├── ","
+        ├── Element
+        └── ListPrime
+            ├── ","
+            ├── Element
+            │   ├── "id"
+            │   └── ElementPrime
+            │       └── ε
+            └── ListPrime
+                └── ε
+
+  Preorder:  List Element id ElementPrime @ ListPrime , Element ListPrime , Element id ElementPrime @ ListPrime @
+  Postorder: id @ ElementPrime Element , Element , id @ ElementPrime Element @ ListPrime ListPrime ListPrime List
+============================================================
+
+======================================================================
+  Input: id ( id , )
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ List                              | id ( id , ) $             | List -> Element ListPrime
+  2     | $ ListPrime Element                 | id ( id , ) $             | Element -> id ElementPrime
+  3     | $ ListPrime ElementPrime id         | id ( id , ) $             | Match 'id'
+  4     | $ ListPrime ElementPrime            | ( id , ) $                | ElementPrime -> ( ArgList )
+  5     | $ ListPrime ) ArgList (             | ( id , ) $                | Match '('
+  6     | $ ListPrime ) ArgList               | id , ) $                  | ArgList -> Arg ArgTail
+  7     | $ ListPrime ) ArgTail Arg           | id , ) $                  | Arg -> id
+  8     | $ ListPrime ) ArgTail id            | id , ) $                  | Match 'id'
+  9     | $ ListPrime ) ArgTail               | , ) $                     | ArgTail -> , Arg ArgTail
+  10    | $ ListPrime ) ArgTail Arg ,         | , ) $                     | Match ','
+  11    | $ ListPrime ) ArgTail Arg           | ) $                       | ERROR: No entry M[Arg, )]. Pop 'Arg' (sync on FOLLOW)
+  12    | $ ListPrime ) ArgTail               | ) $                       | ArgTail -> @
+  13    | $ ListPrime )                       | ) $                       | Match ')'
+  14    | $ ListPrime                         | $                         | ListPrime -> @
+  15    | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 8, column 5: No production for M[Arg, )]. Unexpected ')'. Action: Popped 'Arg' from stack
+
+============================================================
+  Parse Tree for: id ( id , )
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ List
+     ├─ Element
+     │  ├─ [id]
+     │  └─ ElementPrime
+     │     ├─ [(]
+     │     ├─ ArgList
+     │     │  ├─ Arg
+     │     │  │  └─ [id]
+     │     │  └─ ArgTail
+     │     │     ├─ [,]
+     │     │     ├─ Arg
+     │     │     └─ ArgTail
+     │     │        └─ [ε]
+     │     └─ [)]
+     └─ ListPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── List
+    ├── Element
+    │   ├── "id"
+    │   └── ElementPrime
+    │       ├── "("
+    │       ├── ArgList
+    │       │   ├── Arg
+    │       │   │   └── "id"
+    │       │   └── ArgTail
+    │       │       ├── ","
+    │       │       ├── Arg
+    │       │       └── ArgTail
+    │       │           └── ε
+    │       └── ")"
+    └── ListPrime
+        └── ε
+
+  Preorder:  List Element id ElementPrime ( ArgList Arg id ArgTail , Arg ArgTail @ ) ListPrime @
+  Postorder: id ( id Arg , Arg @ ArgTail ArgTail ArgList ) ElementPrime Element @ ListPrime List
+============================================================

@@ -1,0 +1,479 @@
+LL(1) Parser - Complete Output
+Generated: 2026-03-29 12:18:36
+Grammar: ../input/grammar2.txt
+Input: ../input/input_g2.txt
+
+============================================================
+  Original Grammar
+============================================================
+  Stmt -> if Expr then Stmt else Stmt | if Expr then Stmt | assign
+  Expr -> id | num
+============================================================
+
+============================================================
+  Grammar After Left Factoring
+============================================================
+  Stmt -> if Expr then Stmt StmtPrime | assign
+  StmtPrime -> else Stmt | @
+  Expr -> id | num
+============================================================
+
+============================================================
+  Grammar After Left Recursion Removal
+============================================================
+  Stmt -> if Expr then Stmt StmtPrime | assign
+  StmtPrime -> else Stmt | @
+  Expr -> id | num
+============================================================
+
+============================================================
+  FIRST Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Stmt                 { if, assign }
+  StmtPrime            { else, @ }
+  Expr                 { id, num }
+============================================================
+
+============================================================
+  FOLLOW Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Stmt                 { $, else }
+  StmtPrime            { $, else }
+  Expr                 { then }
+============================================================
+
+================================================================================
+  LL(1) Parsing Table
+================================================================================
+                 | if                                 | then                               | assign                             | else                               | id                                 | num                                | $                                  |
+  ---------------+------------------------------------+------------------------------------+------------------------------------+------------------------------------+------------------------------------+------------------------------------+------------------------------------+
+  Stmt           | Stmt -> if Expr then Stmt StmtPrime|                                    | Stmt -> assign                     |                                    |                                    |                                    |                                    |
+  StmtPrime      |                                    |                                    |                                    | StmtPrime -> else Stmt; StmtPrim...|                                    |                                    | StmtPrime -> @                     |
+  Expr           |                                    |                                    |                                    |                                    | Expr -> id                         | Expr -> num                        |                                    |
+================================================================================
+
+  [CONFLICT] The grammar is NOT LL(1).
+  Cells with multiple entries (conflicts):
+    M[StmtPrime, else] = {
+      StmtPrime -> else Stmt
+      StmtPrime -> @
+    }
+
+======================================================================
+  Input: if id then assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if id then assign $       | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if id then assign $       | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | id then assign $          | Expr -> id
+  4     | $ StmtPrime Stmt then id            | id then assign $          | Match 'id'
+  5     | $ StmtPrime Stmt then               | then assign $             | Match 'then'
+  6     | $ StmtPrime Stmt                    | assign $                  | Stmt -> assign
+  7     | $ StmtPrime assign                  | assign $                  | Match 'assign'
+  8     | $ StmtPrime                         | $                         | StmtPrime -> @
+  9     | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: if id then assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     │  └─ [id]
+     ├─ [then]
+     ├─ Stmt
+     │  └─ [assign]
+     └─ StmtPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    │   └── "id"
+    ├── "then"
+    ├── Stmt
+    │   └── "assign"
+    └── StmtPrime
+        └── ε
+
+  Preorder:  Stmt if Expr id then Stmt assign StmtPrime @
+  Postorder: if id Expr then assign Stmt @ StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: if num then assign else assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if num then assign else assign $ | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if num then assign else assign $ | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | num then assign else assign $ | Expr -> num
+  4     | $ StmtPrime Stmt then num           | num then assign else assign $ | Match 'num'
+  5     | $ StmtPrime Stmt then               | then assign else assign $ | Match 'then'
+  6     | $ StmtPrime Stmt                    | assign else assign $      | Stmt -> assign
+  7     | $ StmtPrime assign                  | assign else assign $      | Match 'assign'
+  8     | $ StmtPrime                         | else assign $             | StmtPrime -> else Stmt
+  9     | $ Stmt else                         | else assign $             | Match 'else'
+  10    | $ Stmt                              | assign $                  | Stmt -> assign
+  11    | $ assign                            | assign $                  | Match 'assign'
+  12    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: if num then assign else assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     │  └─ [num]
+     ├─ [then]
+     ├─ Stmt
+     │  └─ [assign]
+     └─ StmtPrime
+        ├─ [else]
+        └─ Stmt
+           └─ [assign]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    │   └── "num"
+    ├── "then"
+    ├── Stmt
+    │   └── "assign"
+    └── StmtPrime
+        ├── "else"
+        └── Stmt
+            └── "assign"
+
+  Preorder:  Stmt if Expr num then Stmt assign StmtPrime else Stmt assign
+  Postorder: if num Expr then assign Stmt else assign Stmt StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: if id then if num then assign else assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if id then if num then assign else assign $ | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if id then if num then assign else assign $ | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | id then if num then assign else assign $ | Expr -> id
+  4     | $ StmtPrime Stmt then id            | id then if num then assign else assign $ | Match 'id'
+  5     | $ StmtPrime Stmt then               | then if num then assign else assign $ | Match 'then'
+  6     | $ StmtPrime Stmt                    | if num then assign else assign $ | Stmt -> if Expr then Stmt StmtPrime
+  7     | $ StmtPrime StmtPrime Stmt then Expr if | if num then assign else assign $ | Match 'if'
+  8     | $ StmtPrime StmtPrime Stmt then Expr | num then assign else assign $ | Expr -> num
+  9     | $ StmtPrime StmtPrime Stmt then num | num then assign else assign $ | Match 'num'
+  10    | $ StmtPrime StmtPrime Stmt then     | then assign else assign $ | Match 'then'
+  11    | $ StmtPrime StmtPrime Stmt          | assign else assign $      | Stmt -> assign
+  12    | $ StmtPrime StmtPrime assign        | assign else assign $      | Match 'assign'
+  13    | $ StmtPrime StmtPrime               | else assign $             | StmtPrime -> else Stmt
+  14    | $ StmtPrime Stmt else               | else assign $             | Match 'else'
+  15    | $ StmtPrime Stmt                    | assign $                  | Stmt -> assign
+  16    | $ StmtPrime assign                  | assign $                  | Match 'assign'
+  17    | $ StmtPrime                         | $                         | StmtPrime -> @
+  18    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: if id then if num then assign else assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     │  └─ [id]
+     ├─ [then]
+     ├─ Stmt
+     │  ├─ [if]
+     │  ├─ Expr
+     │  │  └─ [num]
+     │  ├─ [then]
+     │  ├─ Stmt
+     │  │  └─ [assign]
+     │  └─ StmtPrime
+     │     ├─ [else]
+     │     └─ Stmt
+     │        └─ [assign]
+     └─ StmtPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    │   └── "id"
+    ├── "then"
+    ├── Stmt
+    │   ├── "if"
+    │   ├── Expr
+    │   │   └── "num"
+    │   ├── "then"
+    │   ├── Stmt
+    │   │   └── "assign"
+    │   └── StmtPrime
+    │       ├── "else"
+    │       └── Stmt
+    │           └── "assign"
+    └── StmtPrime
+        └── ε
+
+  Preorder:  Stmt if Expr id then Stmt if Expr num then Stmt assign StmtPrime else Stmt assign StmtPrime @
+  Postorder: if id Expr then if num Expr then assign Stmt else assign Stmt StmtPrime Stmt @ StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | assign $                  | Stmt -> assign
+  2     | $ assign                            | assign $                  | Match 'assign'
+  3     | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     └─ [assign]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    └── "assign"
+
+  Preorder:  Stmt assign
+  Postorder: assign Stmt
+============================================================
+
+======================================================================
+  Input: if num then assign else if id then assign else assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if num then assign else if id then assign else assign $ | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if num then assign else if id then assign else assign $ | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | num then assign else if id then assign else assign $ | Expr -> num
+  4     | $ StmtPrime Stmt then num           | num then assign else if id then assign else assign $ | Match 'num'
+  5     | $ StmtPrime Stmt then               | then assign else if id then assign else assign $ | Match 'then'
+  6     | $ StmtPrime Stmt                    | assign else if id then assign else assign $ | Stmt -> assign
+  7     | $ StmtPrime assign                  | assign else if id then assign else assign $ | Match 'assign'
+  8     | $ StmtPrime                         | else if id then assign else assign $ | StmtPrime -> else Stmt
+  9     | $ Stmt else                         | else if id then assign else assign $ | Match 'else'
+  10    | $ Stmt                              | if id then assign else assign $ | Stmt -> if Expr then Stmt StmtPrime
+  11    | $ StmtPrime Stmt then Expr if       | if id then assign else assign $ | Match 'if'
+  12    | $ StmtPrime Stmt then Expr          | id then assign else assign $ | Expr -> id
+  13    | $ StmtPrime Stmt then id            | id then assign else assign $ | Match 'id'
+  14    | $ StmtPrime Stmt then               | then assign else assign $ | Match 'then'
+  15    | $ StmtPrime Stmt                    | assign else assign $      | Stmt -> assign
+  16    | $ StmtPrime assign                  | assign else assign $      | Match 'assign'
+  17    | $ StmtPrime                         | else assign $             | StmtPrime -> else Stmt
+  18    | $ Stmt else                         | else assign $             | Match 'else'
+  19    | $ Stmt                              | assign $                  | Stmt -> assign
+  20    | $ assign                            | assign $                  | Match 'assign'
+  21    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: if num then assign else if id then assign else assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     │  └─ [num]
+     ├─ [then]
+     ├─ Stmt
+     │  └─ [assign]
+     └─ StmtPrime
+        ├─ [else]
+        └─ Stmt
+           ├─ [if]
+           ├─ Expr
+           │  └─ [id]
+           ├─ [then]
+           ├─ Stmt
+           │  └─ [assign]
+           └─ StmtPrime
+              ├─ [else]
+              └─ Stmt
+                 └─ [assign]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    │   └── "num"
+    ├── "then"
+    ├── Stmt
+    │   └── "assign"
+    └── StmtPrime
+        ├── "else"
+        └── Stmt
+            ├── "if"
+            ├── Expr
+            │   └── "id"
+            ├── "then"
+            ├── Stmt
+            │   └── "assign"
+            └── StmtPrime
+                ├── "else"
+                └── Stmt
+                    └── "assign"
+
+  Preorder:  Stmt if Expr num then Stmt assign StmtPrime else Stmt if Expr id then Stmt assign StmtPrime else Stmt assign
+  Postorder: if num Expr then assign Stmt else if id Expr then assign Stmt else assign Stmt StmtPrime Stmt StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: if id then
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if id then $              | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if id then $              | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | id then $                 | Expr -> id
+  4     | $ StmtPrime Stmt then id            | id then $                 | Match 'id'
+  5     | $ StmtPrime Stmt then               | then $                    | Match 'then'
+  6     | $ StmtPrime Stmt                    | $                         | ERROR: No entry M[Stmt, $]. Pop 'Stmt' (sync on FOLLOW)
+  7     | $ StmtPrime                         | $                         | StmtPrime -> @
+  8     | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 6, column 4: No production for M[Stmt, $]. Unexpected '$'. Action: Popped 'Stmt' from stack
+
+============================================================
+  Parse Tree for: if id then
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     │  └─ [id]
+     ├─ [then]
+     ├─ Stmt
+     └─ StmtPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    │   └── "id"
+    ├── "then"
+    ├── Stmt
+    └── StmtPrime
+        └── ε
+
+  Preorder:  Stmt if Expr id then Stmt StmtPrime @
+  Postorder: if id Expr then Stmt @ StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: if then assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | if then assign $          | Stmt -> if Expr then Stmt StmtPrime
+  2     | $ StmtPrime Stmt then Expr if       | if then assign $          | Match 'if'
+  3     | $ StmtPrime Stmt then Expr          | then assign $             | ERROR: No entry M[Expr, then]. Pop 'Expr' (sync on FOLLOW)
+  4     | $ StmtPrime Stmt then               | then assign $             | Match 'then'
+  5     | $ StmtPrime Stmt                    | assign $                  | Stmt -> assign
+  6     | $ StmtPrime assign                  | assign $                  | Match 'assign'
+  7     | $ StmtPrime                         | $                         | StmtPrime -> @
+  8     | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 7, column 2: No production for M[Expr, then]. Unexpected 'then'. Action: Popped 'Expr' from stack
+
+============================================================
+  Parse Tree for: if then assign
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Stmt
+     ├─ [if]
+     ├─ Expr
+     ├─ [then]
+     ├─ Stmt
+     │  └─ [assign]
+     └─ StmtPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Stmt
+    ├── "if"
+    ├── Expr
+    ├── "then"
+    ├── Stmt
+    │   └── "assign"
+    └── StmtPrime
+        └── ε
+
+  Preorder:  Stmt if Expr then Stmt assign StmtPrime @
+  Postorder: if Expr then assign Stmt @ StmtPrime Stmt
+============================================================
+
+======================================================================
+  Input: assign else assign
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Stmt                              | assign else assign $      | Stmt -> assign
+  2     | $ assign                            | assign else assign $      | Match 'assign'
+
+  >> Result: String REJECTED.

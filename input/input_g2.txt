@@ -1,0 +1,8 @@
+if id then assign
+if num then assign else assign
+if id then if num then assign else assign
+assign
+if num then assign else if id then assign else assign
+if id then
+if then assign
+assign else assign
