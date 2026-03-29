@@ -1,0 +1,449 @@
+LL(1) Parser - Complete Output
+Generated: 2026-03-29 12:04:10
+Grammar: ../input/grammar1.txt
+Input: ../input/input_valid.txt
+
+============================================================
+  Original Grammar
+============================================================
+  Expr -> Expr + Term | Term
+  Term -> Term * Factor | Factor
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  Grammar After Left Factoring
+============================================================
+  Expr -> Expr + Term | Term
+  Term -> Term * Factor | Factor
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  Grammar After Left Recursion Removal
+============================================================
+  Expr -> Term ExprPrime
+  ExprPrime -> + Term ExprPrime | @
+  Term -> Factor TermPrime
+  TermPrime -> * Factor TermPrime | @
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  FIRST Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Expr                 { (, id }
+  ExprPrime            { +, @ }
+  Term                 { (, id }
+  TermPrime            { *, @ }
+  Factor               { (, id }
+============================================================
+
+============================================================
+  FOLLOW Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Expr                 { $, ) }
+  ExprPrime            { $, ) }
+  Term                 { +, $, ) }
+  TermPrime            { +, $, ) }
+  Factor               { *, +, $, ) }
+============================================================
+
+================================================================================
+  LL(1) Parsing Table
+================================================================================
+                 | +                                | *                                | (                                | )                                | id                               | $                                |
+  ---------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+
+  Expr           |                                  |                                  | Expr -> Term ExprPrime           |                                  | Expr -> Term ExprPrime           |                                  |
+  ExprPrime      | ExprPrime -> + Term ExprPrime    |                                  |                                  | ExprPrime -> @                   |                                  | ExprPrime -> @                   |
+  Term           |                                  |                                  | Term -> Factor TermPrime         |                                  | Term -> Factor TermPrime         |                                  |
+  TermPrime      | TermPrime -> @                   | TermPrime -> * Factor TermPrime  |                                  | TermPrime -> @                   |                                  | TermPrime -> @                   |
+  Factor         |                                  |                                  | Factor -> ( Expr )               |                                  | Factor -> id                     |                                  |
+================================================================================
+
+  [OK] The grammar IS LL(1).
+
+======================================================================
+  Input: id + id * id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id + id * id $            | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id + id * id $            | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id + id * id $            | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id + id * id $            | Match 'id'
+  5     | $ ExprPrime TermPrime               | + id * id $               | TermPrime -> @
+  6     | $ ExprPrime                         | + id * id $               | ExprPrime -> + Term ExprPrime
+  7     | $ ExprPrime Term +                  | + id * id $               | Match '+'
+  8     | $ ExprPrime Term                    | id * id $                 | Term -> Factor TermPrime
+  9     | $ ExprPrime TermPrime Factor        | id * id $                 | Factor -> id
+  10    | $ ExprPrime TermPrime id            | id * id $                 | Match 'id'
+  11    | $ ExprPrime TermPrime               | * id $                    | TermPrime -> * Factor TermPrime
+  12    | $ ExprPrime TermPrime Factor *      | * id $                    | Match '*'
+  13    | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  14    | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  15    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  16    | $ ExprPrime                         | $                         | ExprPrime -> @
+  17    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id + id * id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        ├─ [+]
+        ├─ Term
+        │  ├─ Factor
+        │  │  └─ [id]
+        │  └─ TermPrime
+        │     ├─ [*]
+        │     ├─ Factor
+        │     │  └─ [id]
+        │     └─ TermPrime
+        │        └─ [ε]
+        └─ ExprPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        ├── "+"
+        ├── Term
+        │   ├── Factor
+        │   │   └── "id"
+        │   └── TermPrime
+        │       ├── "*"
+        │       ├── Factor
+        │       │   └── "id"
+        │       └── TermPrime
+        │           └── ε
+        └── ExprPrime
+            └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime + Term Factor id TermPrime * Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term + id Factor * id Factor @ TermPrime TermPrime Term @ ExprPrime ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: ( id + id ) * id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | ( id + id ) * id $        | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | ( id + id ) * id $        | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | ( id + id ) * id $        | Factor -> ( Expr )
+  4     | $ ExprPrime TermPrime ) Expr (      | ( id + id ) * id $        | Match '('
+  5     | $ ExprPrime TermPrime ) Expr        | id + id ) * id $          | Expr -> Term ExprPrime
+  6     | $ ExprPrime TermPrime ) ExprPrime Term | id + id ) * id $          | Term -> Factor TermPrime
+  7     | $ ExprPrime TermPrime ) ExprPrime TermPrime Factor | id + id ) * id $          | Factor -> id
+  8     | $ ExprPrime TermPrime ) ExprPrime TermPrime id | id + id ) * id $          | Match 'id'
+  9     | $ ExprPrime TermPrime ) ExprPrime TermPrime | + id ) * id $             | TermPrime -> @
+  10    | $ ExprPrime TermPrime ) ExprPrime   | + id ) * id $             | ExprPrime -> + Term ExprPrime
+  11    | $ ExprPrime TermPrime ) ExprPrime Term + | + id ) * id $             | Match '+'
+  12    | $ ExprPrime TermPrime ) ExprPrime Term | id ) * id $               | Term -> Factor TermPrime
+  13    | $ ExprPrime TermPrime ) ExprPrime TermPrime Factor | id ) * id $               | Factor -> id
+  14    | $ ExprPrime TermPrime ) ExprPrime TermPrime id | id ) * id $               | Match 'id'
+  15    | $ ExprPrime TermPrime ) ExprPrime TermPrime | ) * id $                  | TermPrime -> @
+  16    | $ ExprPrime TermPrime ) ExprPrime   | ) * id $                  | ExprPrime -> @
+  17    | $ ExprPrime TermPrime )             | ) * id $                  | Match ')'
+  18    | $ ExprPrime TermPrime               | * id $                    | TermPrime -> * Factor TermPrime
+  19    | $ ExprPrime TermPrime Factor *      | * id $                    | Match '*'
+  20    | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  21    | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  22    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  23    | $ ExprPrime                         | $                         | ExprPrime -> @
+  24    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: ( id + id ) * id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  ├─ [(]
+     │  │  ├─ Expr
+     │  │  │  ├─ Term
+     │  │  │  │  ├─ Factor
+     │  │  │  │  │  └─ [id]
+     │  │  │  │  └─ TermPrime
+     │  │  │  │     └─ [ε]
+     │  │  │  └─ ExprPrime
+     │  │  │     ├─ [+]
+     │  │  │     ├─ Term
+     │  │  │     │  ├─ Factor
+     │  │  │     │  │  └─ [id]
+     │  │  │     │  └─ TermPrime
+     │  │  │     │     └─ [ε]
+     │  │  │     └─ ExprPrime
+     │  │  │        └─ [ε]
+     │  │  └─ [)]
+     │  └─ TermPrime
+     │     ├─ [*]
+     │     ├─ Factor
+     │     │  └─ [id]
+     │     └─ TermPrime
+     │        └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   ├── "("
+    │   │   ├── Expr
+    │   │   │   ├── Term
+    │   │   │   │   ├── Factor
+    │   │   │   │   │   └── "id"
+    │   │   │   │   └── TermPrime
+    │   │   │   │       └── ε
+    │   │   │   └── ExprPrime
+    │   │   │       ├── "+"
+    │   │   │       ├── Term
+    │   │   │       │   ├── Factor
+    │   │   │       │   │   └── "id"
+    │   │   │       │   └── TermPrime
+    │   │   │       │       └── ε
+    │   │   │       └── ExprPrime
+    │   │   │           └── ε
+    │   │   └── ")"
+    │   └── TermPrime
+    │       ├── "*"
+    │       ├── Factor
+    │       │   └── "id"
+    │       └── TermPrime
+    │           └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor ( Expr Term Factor id TermPrime @ ExprPrime + Term Factor id TermPrime @ ExprPrime @ ) TermPrime * Factor id TermPrime @ ExprPrime @
+  Postorder: ( id Factor @ TermPrime Term + id Factor @ TermPrime Term @ ExprPrime ExprPrime Expr ) Factor * id Factor @ TermPrime TermPrime Term @ ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: id * id + id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id * id + id $            | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id * id + id $            | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id * id + id $            | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id * id + id $            | Match 'id'
+  5     | $ ExprPrime TermPrime               | * id + id $               | TermPrime -> * Factor TermPrime
+  6     | $ ExprPrime TermPrime Factor *      | * id + id $               | Match '*'
+  7     | $ ExprPrime TermPrime Factor        | id + id $                 | Factor -> id
+  8     | $ ExprPrime TermPrime id            | id + id $                 | Match 'id'
+  9     | $ ExprPrime TermPrime               | + id $                    | TermPrime -> @
+  10    | $ ExprPrime                         | + id $                    | ExprPrime -> + Term ExprPrime
+  11    | $ ExprPrime Term +                  | + id $                    | Match '+'
+  12    | $ ExprPrime Term                    | id $                      | Term -> Factor TermPrime
+  13    | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  14    | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  15    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  16    | $ ExprPrime                         | $                         | ExprPrime -> @
+  17    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id * id + id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     ├─ [*]
+     │     ├─ Factor
+     │     │  └─ [id]
+     │     └─ TermPrime
+     │        └─ [ε]
+     └─ ExprPrime
+        ├─ [+]
+        ├─ Term
+        │  ├─ Factor
+        │  │  └─ [id]
+        │  └─ TermPrime
+        │     └─ [ε]
+        └─ ExprPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       ├── "*"
+    │       ├── Factor
+    │       │   └── "id"
+    │       └── TermPrime
+    │           └── ε
+    └── ExprPrime
+        ├── "+"
+        ├── Term
+        │   ├── Factor
+        │   │   └── "id"
+        │   └── TermPrime
+        │       └── ε
+        └── ExprPrime
+            └── ε
+
+  Preorder:  Expr Term Factor id TermPrime * Factor id TermPrime @ ExprPrime + Term Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor * id Factor @ TermPrime TermPrime Term + id Factor @ TermPrime Term @ ExprPrime ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id $                      | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id $                      | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  5     | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  6     | $ ExprPrime                         | $                         | ExprPrime -> @
+  7     | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term @ ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: ( id )
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | ( id ) $                  | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | ( id ) $                  | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | ( id ) $                  | Factor -> ( Expr )
+  4     | $ ExprPrime TermPrime ) Expr (      | ( id ) $                  | Match '('
+  5     | $ ExprPrime TermPrime ) Expr        | id ) $                    | Expr -> Term ExprPrime
+  6     | $ ExprPrime TermPrime ) ExprPrime Term | id ) $                    | Term -> Factor TermPrime
+  7     | $ ExprPrime TermPrime ) ExprPrime TermPrime Factor | id ) $                    | Factor -> id
+  8     | $ ExprPrime TermPrime ) ExprPrime TermPrime id | id ) $                    | Match 'id'
+  9     | $ ExprPrime TermPrime ) ExprPrime TermPrime | ) $                       | TermPrime -> @
+  10    | $ ExprPrime TermPrime ) ExprPrime   | ) $                       | ExprPrime -> @
+  11    | $ ExprPrime TermPrime )             | ) $                       | Match ')'
+  12    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  13    | $ ExprPrime                         | $                         | ExprPrime -> @
+  14    | $                                   | $                         | ACCEPT
+
+  >> Result: String ACCEPTED successfully!
+
+============================================================
+  Parse Tree for: ( id )
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  ├─ [(]
+     │  │  ├─ Expr
+     │  │  │  ├─ Term
+     │  │  │  │  ├─ Factor
+     │  │  │  │  │  └─ [id]
+     │  │  │  │  └─ TermPrime
+     │  │  │  │     └─ [ε]
+     │  │  │  └─ ExprPrime
+     │  │  │     └─ [ε]
+     │  │  └─ [)]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   ├── "("
+    │   │   ├── Expr
+    │   │   │   ├── Term
+    │   │   │   │   ├── Factor
+    │   │   │   │   │   └── "id"
+    │   │   │   │   └── TermPrime
+    │   │   │   │       └── ε
+    │   │   │   └── ExprPrime
+    │   │   │       └── ε
+    │   │   └── ")"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor ( Expr Term Factor id TermPrime @ ExprPrime @ ) TermPrime @ ExprPrime @
+  Postorder: ( id Factor @ TermPrime Term @ ExprPrime Expr ) Factor @ TermPrime Term @ ExprPrime Expr
+============================================================

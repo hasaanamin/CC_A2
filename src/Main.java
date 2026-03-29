@@ -40,6 +40,9 @@ public class Main {
         }
         if (args.length >= 2) {
             inputFile = args[1];
+            if (inputFile.equalsIgnoreCase("NONE")) {
+                inputFile = null;
+            }
         }
         if (args.length >= 3) {
             outputFile = args[2];

@@ -412,9 +412,17 @@ public class Parser {
                 }
             }
 
-            // Parse tree
+            // Parse tree (written inline to keep output order correct)
             if (parseTree != null) {
-                parseTree.writeToFile(filePath, "Parse Tree for: " + input);
+                writer.println("\n" + "=".repeat(60));
+                writer.println("  Parse Tree for: " + input);
+                writer.println("=".repeat(60));
+                writer.println(parseTree.toASCIIArt());
+                writer.println("  Indented Text Format:");
+                writer.println(parseTree.toIndentedText());
+                writer.println("  Preorder:  " + String.join(" ", parseTree.preorderTraversal()));
+                writer.println("  Postorder: " + String.join(" ", parseTree.postorderTraversal()));
+                writer.println("=".repeat(60));
             }
 
             writer.close();

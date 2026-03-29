@@ -1,0 +1,410 @@
+LL(1) Parser - Complete Output
+Generated: 2026-03-29 12:04:20
+Grammar: ../input/grammar1.txt
+Input: ../input/input_errors.txt
+
+============================================================
+  Original Grammar
+============================================================
+  Expr -> Expr + Term | Term
+  Term -> Term * Factor | Factor
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  Grammar After Left Factoring
+============================================================
+  Expr -> Expr + Term | Term
+  Term -> Term * Factor | Factor
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  Grammar After Left Recursion Removal
+============================================================
+  Expr -> Term ExprPrime
+  ExprPrime -> + Term ExprPrime | @
+  Term -> Factor TermPrime
+  TermPrime -> * Factor TermPrime | @
+  Factor -> ( Expr ) | id
+============================================================
+
+============================================================
+  FIRST Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Expr                 { (, id }
+  ExprPrime            { +, @ }
+  Term                 { (, id }
+  TermPrime            { *, @ }
+  Factor               { (, id }
+============================================================
+
+============================================================
+  FOLLOW Sets
+============================================================
+  Non-Terminal         Set
+  --------------------------------------------------
+  Expr                 { $, ) }
+  ExprPrime            { $, ) }
+  Term                 { +, $, ) }
+  TermPrime            { +, $, ) }
+  Factor               { *, +, $, ) }
+============================================================
+
+================================================================================
+  LL(1) Parsing Table
+================================================================================
+                 | +                                | *                                | (                                | )                                | id                               | $                                |
+  ---------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+----------------------------------+
+  Expr           |                                  |                                  | Expr -> Term ExprPrime           |                                  | Expr -> Term ExprPrime           |                                  |
+  ExprPrime      | ExprPrime -> + Term ExprPrime    |                                  |                                  | ExprPrime -> @                   |                                  | ExprPrime -> @                   |
+  Term           |                                  |                                  | Term -> Factor TermPrime         |                                  | Term -> Factor TermPrime         |                                  |
+  TermPrime      | TermPrime -> @                   | TermPrime -> * Factor TermPrime  |                                  | TermPrime -> @                   |                                  | TermPrime -> @                   |
+  Factor         |                                  |                                  | Factor -> ( Expr )               |                                  | Factor -> id                     |                                  |
+================================================================================
+
+  [OK] The grammar IS LL(1).
+
+======================================================================
+  Input: id + * id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id + * id $               | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id + * id $               | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id + * id $               | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id + * id $               | Match 'id'
+  5     | $ ExprPrime TermPrime               | + * id $                  | TermPrime -> @
+  6     | $ ExprPrime                         | + * id $                  | ExprPrime -> + Term ExprPrime
+  7     | $ ExprPrime Term +                  | + * id $                  | Match '+'
+  8     | $ ExprPrime Term                    | * id $                    | ERROR: No entry M[Term, *]. Skipping '*'
+  9     | $ ExprPrime Term                    | id $                      | Term -> Factor TermPrime
+  10    | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  11    | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  12    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  13    | $ ExprPrime                         | $                         | ExprPrime -> @
+  14    | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 1, column 3: No production for M[Term, *]. Unexpected '*'. Action: Skipped '*' in input
+
+============================================================
+  Parse Tree for: id + * id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        ├─ [+]
+        ├─ Term
+        │  ├─ Factor
+        │  │  └─ [id]
+        │  └─ TermPrime
+        │     └─ [ε]
+        └─ ExprPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        ├── "+"
+        ├── Term
+        │   ├── Factor
+        │   │   └── "id"
+        │   └── TermPrime
+        │       └── ε
+        └── ExprPrime
+            └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime + Term Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term + id Factor @ TermPrime Term @ ExprPrime ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: + id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | + id $                    | ERROR: No entry M[Expr, +]. Skipping '+'
+  2     | $ Expr                              | id $                      | Expr -> Term ExprPrime
+  3     | $ ExprPrime Term                    | id $                      | Term -> Factor TermPrime
+  4     | $ ExprPrime TermPrime Factor        | id $                      | Factor -> id
+  5     | $ ExprPrime TermPrime id            | id $                      | Match 'id'
+  6     | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  7     | $ ExprPrime                         | $                         | ExprPrime -> @
+  8     | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 2, column 1: No production for M[Expr, +]. Unexpected '+'. Action: Skipped '+' in input
+
+============================================================
+  Parse Tree for: + id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term @ ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: id + id *
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id + id * $               | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id + id * $               | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id + id * $               | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id + id * $               | Match 'id'
+  5     | $ ExprPrime TermPrime               | + id * $                  | TermPrime -> @
+  6     | $ ExprPrime                         | + id * $                  | ExprPrime -> + Term ExprPrime
+  7     | $ ExprPrime Term +                  | + id * $                  | Match '+'
+  8     | $ ExprPrime Term                    | id * $                    | Term -> Factor TermPrime
+  9     | $ ExprPrime TermPrime Factor        | id * $                    | Factor -> id
+  10    | $ ExprPrime TermPrime id            | id * $                    | Match 'id'
+  11    | $ ExprPrime TermPrime               | * $                       | TermPrime -> * Factor TermPrime
+  12    | $ ExprPrime TermPrime Factor *      | * $                       | Match '*'
+  13    | $ ExprPrime TermPrime Factor        | $                         | ERROR: No entry M[Factor, $]. Pop 'Factor' (sync on FOLLOW)
+  14    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  15    | $ ExprPrime                         | $                         | ExprPrime -> @
+  16    | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 3, column 5: No production for M[Factor, $]. Unexpected '$'. Action: Popped 'Factor' from stack
+
+============================================================
+  Parse Tree for: id + id *
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        ├─ [+]
+        ├─ Term
+        │  ├─ Factor
+        │  │  └─ [id]
+        │  └─ TermPrime
+        │     ├─ [*]
+        │     ├─ Factor
+        │     └─ TermPrime
+        │        └─ [ε]
+        └─ ExprPrime
+           └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        ├── "+"
+        ├── Term
+        │   ├── Factor
+        │   │   └── "id"
+        │   └── TermPrime
+        │       ├── "*"
+        │       ├── Factor
+        │       └── TermPrime
+        │           └── ε
+        └── ExprPrime
+            └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime + Term Factor id TermPrime * Factor TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term + id Factor * Factor @ TermPrime TermPrime Term @ ExprPrime ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: ( id + id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | ( id + id $               | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | ( id + id $               | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | ( id + id $               | Factor -> ( Expr )
+  4     | $ ExprPrime TermPrime ) Expr (      | ( id + id $               | Match '('
+  5     | $ ExprPrime TermPrime ) Expr        | id + id $                 | Expr -> Term ExprPrime
+  6     | $ ExprPrime TermPrime ) ExprPrime Term | id + id $                 | Term -> Factor TermPrime
+  7     | $ ExprPrime TermPrime ) ExprPrime TermPrime Factor | id + id $                 | Factor -> id
+  8     | $ ExprPrime TermPrime ) ExprPrime TermPrime id | id + id $                 | Match 'id'
+  9     | $ ExprPrime TermPrime ) ExprPrime TermPrime | + id $                    | TermPrime -> @
+  10    | $ ExprPrime TermPrime ) ExprPrime   | + id $                    | ExprPrime -> + Term ExprPrime
+  11    | $ ExprPrime TermPrime ) ExprPrime Term + | + id $                    | Match '+'
+  12    | $ ExprPrime TermPrime ) ExprPrime Term | id $                      | Term -> Factor TermPrime
+  13    | $ ExprPrime TermPrime ) ExprPrime TermPrime Factor | id $                      | Factor -> id
+  14    | $ ExprPrime TermPrime ) ExprPrime TermPrime id | id $                      | Match 'id'
+  15    | $ ExprPrime TermPrime ) ExprPrime TermPrime | $                         | TermPrime -> @
+  16    | $ ExprPrime TermPrime ) ExprPrime   | $                         | ExprPrime -> @
+  17    | $ ExprPrime TermPrime )             | $                         | ERROR: Expected ')', found '$'. Popping ')'
+  18    | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  19    | $ ExprPrime                         | $                         | ExprPrime -> @
+  20    | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 4, column 5: Missing symbol. Expected ')' but found '$'. Action: Popped ')' from stack (inserted)
+
+============================================================
+  Parse Tree for: ( id + id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  ├─ [(]
+     │  │  ├─ Expr
+     │  │  │  ├─ Term
+     │  │  │  │  ├─ Factor
+     │  │  │  │  │  └─ [id]
+     │  │  │  │  └─ TermPrime
+     │  │  │  │     └─ [ε]
+     │  │  │  └─ ExprPrime
+     │  │  │     ├─ [+]
+     │  │  │     ├─ Term
+     │  │  │     │  ├─ Factor
+     │  │  │     │  │  └─ [id]
+     │  │  │     │  └─ TermPrime
+     │  │  │     │     └─ [ε]
+     │  │  │     └─ ExprPrime
+     │  │  │        └─ [ε]
+     │  │  └─ [)]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   ├── "("
+    │   │   ├── Expr
+    │   │   │   ├── Term
+    │   │   │   │   ├── Factor
+    │   │   │   │   │   └── "id"
+    │   │   │   │   └── TermPrime
+    │   │   │   │       └── ε
+    │   │   │   └── ExprPrime
+    │   │   │       ├── "+"
+    │   │   │       ├── Term
+    │   │   │       │   ├── Factor
+    │   │   │       │   │   └── "id"
+    │   │   │       │   └── TermPrime
+    │   │   │       │       └── ε
+    │   │   │       └── ExprPrime
+    │   │   │           └── ε
+    │   │   └── ")"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor ( Expr Term Factor id TermPrime @ ExprPrime + Term Factor id TermPrime @ ExprPrime @ ) TermPrime @ ExprPrime @
+  Postorder: ( id Factor @ TermPrime Term + id Factor @ TermPrime Term @ ExprPrime ExprPrime Expr ) Factor @ TermPrime Term @ ExprPrime Expr
+============================================================
+
+======================================================================
+  Input: id id
+======================================================================
+
+  Parsing Trace:
+  Step  | Stack                               | Input                     | Action
+  ----------------------------------------------------------------------------------------------------
+  1     | $ Expr                              | id id $                   | Expr -> Term ExprPrime
+  2     | $ ExprPrime Term                    | id id $                   | Term -> Factor TermPrime
+  3     | $ ExprPrime TermPrime Factor        | id id $                   | Factor -> id
+  4     | $ ExprPrime TermPrime id            | id id $                   | Match 'id'
+  5     | $ ExprPrime TermPrime               | id $                      | ERROR: No entry M[TermPrime, id]. Skipping 'id'
+  6     | $ ExprPrime TermPrime               | $                         | TermPrime -> @
+  7     | $ ExprPrime                         | $                         | ExprPrime -> @
+  8     | $                                   | $                         | ACCEPT
+
+  >> Result: Parsing completed with 1 error(s).
+
+  ERROR at line 5, column 2: No production for M[TermPrime, id]. Unexpected 'id'. Action: Skipped 'id' in input
+
+============================================================
+  Parse Tree for: id id
+============================================================
+
+  Parse Tree (ASCII):
+  ────────────────────────────────────────
+  └─ Expr
+     ├─ Term
+     │  ├─ Factor
+     │  │  └─ [id]
+     │  └─ TermPrime
+     │     └─ [ε]
+     └─ ExprPrime
+        └─ [ε]
+  ────────────────────────────────────────
+
+  Indented Text Format:
+└── Expr
+    ├── Term
+    │   ├── Factor
+    │   │   └── "id"
+    │   └── TermPrime
+    │       └── ε
+    └── ExprPrime
+        └── ε
+
+  Preorder:  Expr Term Factor id TermPrime @ ExprPrime @
+  Postorder: id Factor @ TermPrime Term @ ExprPrime Expr
+============================================================
